@@ -1,0 +1,240 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+}
+
+.barcode {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    width: 100%;
+    height: 400px;
+    background: #171028;
+    color: white;
+}
+
+.barcodeText {
+    letter-spacing: 3px;
+    grid-column: 1 / 13;
+    font-size: 50px;
+    margin: auto;
+}
+
+.exchange {
+    grid-column: 3 / 10;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: auto;
+    max-width: 800px;
+    background: white;
+    border-radius: 10px;
+    border: 2px solid #231c33;
+    margin-top: -100px;
+    padding: 40px;
+}
+
+.firstRow {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.kolicina {
+    margin-right: 30px;
+    color: #231c33;
+}
+
+    .kolicina input {
+        width: 150px;
+        height: 32px;
+        border: 2px solid #231c33;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+.konverzijaIz {
+    margin-right: 30px;
+}
+
+    .konverzijaIz select {
+        width: 150px;
+        height: 38px;
+        border: 2px solid #231c33;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+.dateSelect {
+    margin-top: 20px;
+}
+
+    .dateSelect input {
+        padding: 5px;
+    }
+
+.button {
+    text-align: center;
+    padding: 10px;
+    margin-right: 25px;
+    margin-top: 35px;
+    cursor: pointer;
+}
+
+.konverzijaU select {
+    width: 150px;
+    height: 38px;
+    border: 2px solid #231c33;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.secondRow {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    text-align: center;
+}
+
+.resultValute {
+    margin-top: 30px;
+}
+
+.resultCurerency {
+    font-size: 25px;
+}
+
+.buttonIzvrsi {
+    margin-top: 65px;
+    width: 200px;
+    height: 30px;
+    margin-left: 50px;
+    background: #171028;
+    color: aliceblue;
+    border-radius: 7px;
+    padding: 5px;
+    cursor: pointer;
+    margin: auto;
+}
+
+.bottomSection {
+    margin-top: 100px;
+}
+
+.table {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    grid-column: 7 / 9;
+    display: flex;
+    width: 20%;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background: white;
+    border-radius: 10px;
+    border: 2px solid #231c33;
+    padding: 40px;
+}
+
+.firstElement {
+    width: 80%;
+    min-width: 100px;
+    border: 2px solid #231c33;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.secoundElement {
+    width: 80%;
+    min-width: 100px;
+    border: 2px solid #231c33;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.thirdElement {
+    width: 80%;
+    min-width: 100px;
+    border: 2px solid #231c33;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 1300px) {
+    .firstRow {
+        flex-direction: column;
+    }
+
+    .secondRow {
+        flex-direction: column;
+    }
+
+    .resultCurerency {
+        text-align: center;
+    }
+
+    .resultValute {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .buttonIzvrsi {
+        margin: auto;
+    }
+
+    .kolicina {
+        margin: auto;
+    }
+
+    .konverzijaIz {
+        margin: auto;
+    }
+
+    .button {
+        margin: auto;
+        margin-top: 20px;
+    }
+
+    .konverzijaU {
+        margin: auto;
+    }
+
+    .table {
+        width: 40%;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .firstRow {
+        flex-direction: column;
+    }
+
+    .secondRow {
+        flex-direction: column;
+    }
+
+    .buttonIzvrsi button {
+        width: 100px;
+        height: 50px;
+        margin: auto;
+    }
+
+    .barcodeText {
+        font-size: 45px;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .barcodeText {
+        font-size: 35px;
+    }
+}
+
+@media only screen and (max-width: 450px) {
+    .barcodeText {
+        font-size: 25px;
+    }
+}

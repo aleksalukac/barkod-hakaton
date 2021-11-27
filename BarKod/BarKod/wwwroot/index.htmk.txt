@@ -1,0 +1,223 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Barcode Exchange</title>
+    <link rel="stylesheet/less" type="text/css" href="styles.less" />
+    <script src="less.js" type="text/javascript"></script>
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link rel="icon" href="~/img/button.png" />
+    <script src="~/js/mc-calendar.min.js"></script>
+    <link href="~/css/mc-calendar.min.css" rel="stylesheet" />
+    <link href="~/css/sidenav.css" rel="stylesheet" />
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+    <div class="barcode"><p class="barcodeText">BARCODE EXCHANGE</p></div>
+    <div class="exchange">
+        <div class="firstRow">
+            <div class="kolicina">
+                <p>Količina:</p>
+                <input type="number" id="convertAmount" />
+            </div>
+            <div class="conversationFrom">
+                <p>Konverzija iz:</p>
+                <select id="from">
+                    <option value="RSD">RSD</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="JPY">JPY</option>
+                </select>
+            </div>
+            <div class="button">
+                <img src="~/img/button.png" width="40" height="40" alt="" onclick="swap()" />
+            </div>
+            <div class="conversationTo">
+                <p>Konverzija u:</p>
+                <select id="to">
+                    <option value="RSD">RSD</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="JPY">JPY</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="secondRow">
+            <div class="dateSelect">
+                <input type="date" id="start" name="trip-start" value="2021-01-01" />
+            </div>
+            <div>
+                <p class="resultValute"><div id="conversionRes">1.00 EUR</div>=</p>
+                <p class="resultCurerency" id="currentEuro"></p>
+            </div>
+            <div class="buttonIzvrsi" onclick="convert()"><button>Izvrši konverziju</button></div>
+        </div>
+    </div>
+
+    <div class="table">
+        <p>Trenutne kvote:</p>
+        <div class="firstElement"><p>EUR</p><strong><div id="eur"></div></strong></div>
+        <div class="secoundElement"><p>USD</p><strong><div id="usd"></div></strong></div>
+        <div class="thirdElement"><p>JPY</p><strong><div id="jpy"></div></strong></div>
+    </div>
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#" onclick="showGraphModal('RSD')">Graph for RSD</a>
+        <a href="#" onclick="showGraphModal('USD')">Graph for USD</a>
+        <a href="#" onclick="showGraphModal('EUR')">Graph for EUR</a>
+        <a href="#" onclick="showGraphModal('JPY')">Graph for JPY</a>
+    </div>
+
+    <div id="graphModal" class="w3-modal" onclick="this.style.display='none'">
+        <span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
+        <div class="w3-modal-content w3-animate-zoom">
+            <img src="img_snowtops.jpg" id="graphImage" style="width:100%">
+        </div>
+    </div>
+
+    <script>
+        setDefaultValues();
+
+        function setDefaultValues() {
+            document.getElementById("currentEuro").innerText = getQuote("EUR", "RSD") + " RSD";
+
+            eurGrowing = getIsGrowing("EUR");
+            usdGrowing = getIsGrowing("USD");
+            jpyGrowing = getIsGrowing("JPY");
+
+            document.getElementById("eur").style = eurGrowing ? "color:green" : "color:red";
+            document.getElementById("usd").style = usdGrowing ? "color:green" : "color:red";
+            document.getElementById("jpy").style = jpyGrowing ? "color:green" : "color:red";
+
+            document.getElementById("eur").innerText = getQuote("EUR", "RSD");
+            document.getElementById("usd").innerText = getQuote("USD", "RSD");
+            document.getElementById("jpy").innerText = getQuote("JPY", "RSD");
+        }
+
+        function getIsGrowing(curr) {
+            var value;
+            var json = JSON.stringify({
+                FromCurr: curr,
+            });
+            var promise = $.ajax({
+                type: "GET",
+                async: false,
+                url: "/Currency/GetIsGrowing",
+                data: { jsonObject: json },
+                success: function (data) {
+                    if (data == "Error") {
+                        alert("Error");
+                        return;
+                    }
+                    value = data;
+                },
+            });
+
+            return value;
+        }
+
+        function showGraphModal(curr) {
+            closeNav();
+
+            getGraph(curr);
+        }
+
+        function getQuote(from, to) {
+            var value;
+            var json = JSON.stringify({
+                Date: moment(new Date()).format('DD-MM-yyyy'),
+                FromCurr: from,
+                ToCurr: to
+            });
+            var promise = $.ajax({
+                type: "GET",
+                async: false,
+                url: "/Currency/GetQuote",
+                data: { jsonObject: json },
+                success: function (data) {
+                    if (data == "Error") {
+                        alert("Error");
+                        return;
+                    }
+                    value = data;
+                },
+            });
+
+            promise.done(function () {
+                console.log(value);
+            })
+            return value;
+        }
+
+        function getGraph(curr) {
+            var start = new Date();
+            start.setDate(start.getDate() - 30);
+            var end = new Date();
+
+            var json = JSON.stringify({
+                Date: moment(new Date()).format('DD-MM-yyyy'),
+                FromCurr: curr,
+                ToCurr: "RSD"
+            });
+            $.ajax({
+                type: "GET",
+                url: "/Currency/GetGraphUrl",
+                data: { jsonObject: json },
+                success: function (data, status) {
+                    if (data == "Error") {
+                        alert("Error adding new appointment");
+                        return;
+                    }
+                    console.log(data);
+                    $('#graphImage').attr("src", data);
+                },
+            })
+
+            document.getElementById('graphModal').style.display = 'block'
+        }
+
+        function swap() {
+            var to = document.getElementById("to").value;
+            var from = document.getElementById("from").value;
+            document.getElementById("to").value = from;
+            document.getElementById("from").value = to;
+        }
+
+        function convert() {
+            var amount = parseFloat(document.getElementById("convertAmount").value);
+            var from = document.getElementById("from").value;
+            var to = document.getElementById("to").value;
+            document.getElementById("conversionRes").innerText = amount.toString() + " " + from;
+
+            var value = Math.round(getQuote(from, to) * amount * 1000) / 1000;
+
+            document.getElementById("currentEuro").innerText = value.toString() + " " + to;
+        }
+
+        const myDatePicker = MCDatepicker.create({
+            el: '#example',
+            dateFormat: 'DD-MM-YYYY',
+            bodyType: 'inline'
+        })
+
+        function openNav() {
+            document.getElementById('graphModal').style.display = 'none';
+            document.getElementById("mySidenav").style.width = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+    </script>
+</body>
+</html>
